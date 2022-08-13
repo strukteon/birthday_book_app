@@ -1,20 +1,8 @@
-import 'package:birthday_book/BirthdayEntry.dart';
-import 'package:birthday_book/change_notifiers/settings.dart';
-import 'package:birthday_book/model/birthday.dart';
+import 'package:birthday_book/model/settings.dart';
+import 'package:birthday_book/utilities/widgets/welcome_logic.dart';
+import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
-import 'package:carousel_slider/carousel_slider.dart';
-
-import 'package:flutter_contacts/flutter_contacts.dart';
-import 'package:permission_handler/permission_handler.dart';
-import 'package:shared_preferences/shared_preferences.dart';
-
-import '../utils.dart';
-
-import '../main_screen.dart';
-
-var _textHeader =
-    Typography.blackMountainView.headline1?.apply(fontSizeDelta: 12);
 
 class WelcomeScreen extends StatefulWidget {
   const WelcomeScreen({Key? key}) : super(key: key);
@@ -27,17 +15,16 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
   double _scrollOffset = 0;
   double buttonLeftOpacity = 0;
   CarouselController carouselController = CarouselController();
-  late SharedPreferences prefs;
 
   @override
   Widget build(BuildContext context) {
     Settings.loadPrefs();
 
     var screens = [
-      _WelcomeSlide(),
-      _ContactsSlide(),
-      _MessengerSlide(),
-      _DoneSlide(),
+      const _WelcomeSlide(),
+      const _ContactsSlide(),
+      const _MessengerSlide(),
+      const _DoneSlide(),
     ];
 
     return Scaffold(
@@ -84,9 +71,9 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
                       padding: const EdgeInsets.all(40),
                       child: AnimatedOpacity(
                         opacity: buttonLeftOpacity,
-                        duration: Duration(milliseconds: 200),
+                        duration: const Duration(milliseconds: 200),
                         child: IconButton(
-                          icon: Icon(
+                          icon: const Icon(
                             Icons.chevron_left,
                             color: Colors.white,
                           ),
@@ -132,27 +119,10 @@ class _WelcomeSlide extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-        width: MediaQuery.of(context).size.width,
-        child: Center(
-            child: Container(
-                padding: EdgeInsets.all(16),
-                child: Center(
-                  child: ListView(
-                    shrinkWrap: true,
-                    children: [
-                      Icon(
-                        Icons.waving_hand,
-                        color: Colors.white.withAlpha(180),
-                        size: 80,
-                      ),
-                      Text("Hi!",
-                          style: Theme.of(context).textTheme.headlineLarge),
-                      Text("Thank you for downloading this app!",
-                          style: Theme.of(context).textTheme.headlineSmall),
-                    ],
-                  ),
-                ))));
+    return const _SlideContainer(
+        icon: Icons.waving_hand,
+        title: "Hi!",
+        subtitle: "Thank you for downloading this app!");
   }
 }
 
@@ -161,84 +131,25 @@ class _ContactsSlide extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-        width: MediaQuery.of(context).size.width,
-        child: Center(
-            child: Container(
-                padding: EdgeInsets.all(16),
-                child: Center(
-                  child: ListView(
-                    shrinkWrap: true,
-                    children: [
-                      Container(
-                          padding: EdgeInsets.all(24),
-                          child: Icon(
-                            Icons.contacts,
-                            color: Colors.white.withAlpha(180),
-                            size: 80,
-                          )),
-                      Text(
-                          "Do you want to import your contacts and their saved birthdays?",
-                          style: Theme.of(context).textTheme.headlineSmall),
-                      Container(
-                          padding: EdgeInsets.only(top: 32),
-                          child: Row(
-                            children: [
-                              Expanded(
-                                  child: OutlinedButton(
-                                onPressed: () async {
-                                  var permissionStatus =
-                                      await Permission.contacts.request();
-                                  if (permissionStatus.isDenied) {
-                                    ScaffoldMessenger.of(context).showSnackBar(
-                                        SnackBar(
-                                            content: Text(
-                                                "Please grant contact permissions to link to a contact.")));
-                                    return;
-                                  }
-
-                                  var contacts = await Utils.loadContacts();
-
-                                  await showDialog(
-                                      context: context,
-                                      builder: (context) {
-                                        return SimpleDialog(
-                                          title: Text("Import results"),
-                                          children: [
-                                            ListView.builder(
-                                              itemCount: contacts.length,
-                                              shrinkWrap: true,
-                                              itemBuilder: (context, index) {
-                                                return BirthdayEntry(
-                                                  birthday: contacts[index],
-                                                  ageCalcDate: DateTime.now(),
-                                                  smallView: true,
-                                                  canClick: false,
-                                                );
-                                              },
-                                            ),
-                                            TextButton(
-                                                onPressed: () {
-                                                  Navigator.pop(context);
-                                                },
-                                                child: Text("Ok"))
-                                          ],
-                                        );
-                                      });
-                                  contacts.forEach((element) {
-                                    Birthday.insert(element);
-                                  });
-                                },
-                                child: Text("Import contacts"),
-                                style: OutlinedButton.styleFrom(
-                                    primary: Colors.white,
-                                    side: BorderSide(color: Colors.white)),
-                              ))
-                            ],
-                          )),
-                    ],
-                  ),
-                ))));
+    return _SlideContainer(
+      icon: Icons.contacts,
+      subtitle:
+          "Do you want to import your contacts and their saved birthdays?",
+      child: Container(
+          padding: const EdgeInsets.only(top: 32),
+          child: Row(
+            children: [
+              Expanded(
+                  child: OutlinedButton(
+                onPressed: onImportContactsTap(context),
+                style: OutlinedButton.styleFrom(
+                    primary: Colors.white,
+                    side: const BorderSide(color: Colors.white)),
+                child: const Text("Import contacts"),
+              ))
+            ],
+          )),
+    );
   }
 }
 
@@ -247,29 +158,10 @@ class _DoneSlide extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-        width: MediaQuery.of(context).size.width,
-        child: Center(
-            child: Container(
-                padding: EdgeInsets.all(16),
-                child: Center(
-                  child: ListView(
-                    shrinkWrap: true,
-                    children: [
-                      Container(
-                          padding: EdgeInsets.all(24),
-                          child: Icon(
-                            Icons.done,
-                            color: Colors.white.withAlpha(180),
-                            size: 80,
-                          )),
-                      Text("Setup done",
-                          style: Theme.of(context).textTheme.headlineLarge),
-                      Text("Never forget a birthday again",
-                          style: Theme.of(context).textTheme.headlineSmall),
-                    ],
-                  ),
-                ))));
+    return const _SlideContainer(
+        icon: Icons.done,
+        title: "Setup done",
+        subtitle: "Never forget a birthday again");
   }
 }
 
@@ -285,59 +177,79 @@ class _MessengerSlideState extends State<_MessengerSlide> {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
+    return _SlideContainer(
+      icon: Icons.message,
+      title: "Messenger",
+      subtitle: "Please select the messenger you want to use",
+      child: Container(
+          padding: const EdgeInsets.all(16),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              for (var msnger in PreferredMessenger.values)
+                Container(
+                  padding: const EdgeInsets.all(16),
+                  child: IconButton(
+                    tooltip: msnger.humanReadable,
+                    onPressed: () {
+                      setState(() {
+                        preferredMessenger = msnger;
+                      });
+                      Settings.preferredMessenger = msnger;
+                    },
+                    icon: Icon(
+                      msnger.icon,
+                      color: preferredMessenger == msnger
+                          ? Colors.white
+                          : Colors.white.withAlpha(150),
+                    ),
+                    iconSize: 48,
+                  ),
+                )
+            ],
+          )),
+    );
+  }
+}
+
+class _SlideContainer extends StatelessWidget {
+  final IconData icon;
+  final String? title;
+  final String subtitle;
+  final Widget? child;
+
+  const _SlideContainer(
+      {Key? key,
+      required this.icon,
+      this.title,
+      required this.subtitle,
+      this.child})
+      : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return SizedBox(
         width: MediaQuery.of(context).size.width,
         child: Center(
             child: Container(
-                padding: EdgeInsets.all(16),
+                padding: const EdgeInsets.all(16),
                 child: Center(
                   child: ListView(
                     shrinkWrap: true,
                     children: [
-                      Container(
-                          padding: EdgeInsets.all(24),
-                          child: Icon(
-                            Icons.message,
-                            color: Colors.white.withAlpha(180),
-                            size: 80,
-                          )),
-                      Text("Messenger",
-                          style: Theme.of(context).textTheme.headlineLarge),
-                      Text("Please select a messenger you want to use",
+                      Icon(
+                        Icons.waving_hand,
+                        color: Colors.white.withAlpha(180),
+                        size: 80,
+                      ),
+                      if (title != null)
+                        Text(title!,
+                            style: Theme.of(context).textTheme.headlineLarge),
+                      Text(subtitle,
                           style: Theme.of(context).textTheme.headlineSmall),
-                      Container(
-                          padding: EdgeInsets.all(16),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              for (var msnger in PreferredMessenger.values)
-                                Container(
-                                  padding: EdgeInsets.all(16),
-                                  child: IconButton(
-                                    tooltip: msnger.humanReadable,
-                                    onPressed: () {
-                                      setState(() {
-                                        preferredMessenger = msnger;
-                                      });
-                                      Settings.preferredMessenger = msnger;
-                                    },
-                                    icon: Icon(msnger.icon, color: preferredMessenger == msnger ? Colors.white : Colors.white.withAlpha(150),),
-                                    iconSize: 48,
-                                  ),
-                                )
-                            ],
-                          )
-                      )
+                      if (child != null) child!
                     ],
                   ),
                 ))));
   }
-}
-
-
-void openMainScreen(BuildContext context) async {
-  var prefs = await SharedPreferences.getInstance();
-  prefs.setBool("firstStartFinished", true);
-  Navigator.pushReplacement(
-      context, MaterialPageRoute(builder: (context) => const MainScreen()));
 }

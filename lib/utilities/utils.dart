@@ -1,13 +1,12 @@
-import 'package:flutter/material.dart';
-import 'model/birthday.dart';
 import 'package:flutter_contacts/flutter_contacts.dart';
-import 'package:intl/intl.dart';
+
+import '../model/birthday.dart';
 
 class StaticValues {
   StaticValues._();
 
   static DateTime get firstDate => DateTime.utc(1900, 1, 1);
-  static DateTime get lastDate => DateTime.utc(2050, 10, 16);
+  static DateTime get lastDate => DateTime.utc(2100, 12, 31);
 }
 
 class Utils {

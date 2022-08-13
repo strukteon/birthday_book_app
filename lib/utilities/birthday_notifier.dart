@@ -4,8 +4,8 @@ import 'package:intl/intl.dart';
 import '../model/birthday.dart';
 
 
-class AllBirthdays extends ChangeNotifier {
-  static Map<DateTime, List<Birthday>>? preloadedBirthdays = null;
+class BirthdayNotifier extends ChangeNotifier {
+  static Map<DateTime, List<Birthday>>? preloadedBirthdays;
 
   Map<DateTime, List<Birthday>> birthdays = {};
   List<Birthday> get birthdayList => birthdays.values.fold([], (value, element) {
@@ -13,7 +13,7 @@ class AllBirthdays extends ChangeNotifier {
     return value;
   });
 
-  AllBirthdays() {
+  BirthdayNotifier() {
     if (preloadedBirthdays != null) {
       birthdays = preloadedBirthdays!;
     }

@@ -1,10 +1,10 @@
 import 'dart:async';
 import 'dart:ui';
 
-import 'package:birthday_book/backgroundtask_manager.dart';
-import 'package:birthday_book/change_notifiers/birthday.dart';
-import 'package:birthday_book/main_screen.dart';
-import 'package:birthday_book/notification_manager.dart';
+import 'package:birthday_book/screens/main_screen.dart';
+import 'package:birthday_book/utilities/backgroundtask_manager.dart';
+import 'package:birthday_book/utilities/birthday_notifier.dart';
+import 'package:birthday_book/utilities/notification_manager.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -18,7 +18,7 @@ void main() async {
   }();
 
   await Future.wait([
-    AllBirthdays().asyncAllBirthdays(),
+    BirthdayNotifier().asyncAllBirthdays(),
   ]);
 
   var prefs = await SharedPreferences.getInstance();

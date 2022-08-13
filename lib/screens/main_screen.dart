@@ -1,9 +1,10 @@
-import 'package:birthday_book/change_notifiers/birthday.dart';
 import 'package:birthday_book/screens/all_bds_screen.dart';
 import 'package:birthday_book/screens/settings_screen.dart';
+import 'package:birthday_book/utilities/birthday_notifier.dart';
 import 'package:flutter/material.dart';
-import 'screens/main_calendar_screen.dart';
 import 'package:provider/provider.dart';
+
+import 'main_calendar_screen.dart';
 
 class MainScreen extends StatelessWidget {
   const MainScreen({Key? key}) : super(key: key);
@@ -15,7 +16,7 @@ class MainScreen extends StatelessWidget {
       length: 3,
       child: Scaffold(
         appBar: PreferredSize(
-          preferredSize: Size.fromHeight(kToolbarHeight),
+          preferredSize: const Size.fromHeight(kToolbarHeight),
           child: Container(
             color: Theme.of(context).primaryColorDark,
             child: SafeArea(
@@ -38,7 +39,7 @@ class MainScreen extends StatelessWidget {
           ),
         ),
         body: ChangeNotifierProvider(
-          create: (context) => AllBirthdays(),
+          create: (context) => BirthdayNotifier(),
           child: NotificationListener<OverscrollIndicatorNotification>(
             onNotification: (overscroll) {
               // remove overscroll glow on tab view
