@@ -17,7 +17,7 @@ class CalenderWidget extends StatefulWidget {
 }
 
 class _CalenderWidgetState extends State<CalenderWidget> {
-  var _focusedDay = DateTime.now();
+  var _focusedDay = DateTime(2022, 08, 25);
   var _selectedDay = DateTime.now();
 
   @override
@@ -36,6 +36,7 @@ class _CalenderWidgetState extends State<CalenderWidget> {
                     return isSameDay(_selectedDay, day);
                   },
                   onDaySelected: (selectedDay, focusedDay) {
+                    print([selectedDay,focusedDay]);
                     setState(() {
                       _selectedDay = selectedDay;
                       _focusedDay =
@@ -55,7 +56,7 @@ class _CalenderWidgetState extends State<CalenderWidget> {
                   padding: const EdgeInsets.only(left: 16, top: 16, bottom: 8),
                   alignment: Alignment.centerLeft,
                   child: Text(
-                    dayDifference(DateTime.now(), _focusedDay),
+                    dayDifference(DateTime.now(), _selectedDay),
                     style: TextStyle(
                         fontWeight: FontWeight.w600,
                         color: Colors.black.withAlpha(100)),
@@ -64,16 +65,16 @@ class _CalenderWidgetState extends State<CalenderWidget> {
                 Expanded(
                   child: ListView(
                     children: [
-                      if (birthdays.getBirthdaysForDate(_focusedDay).isEmpty)
+                      if (birthdays.getBirthdaysForDate(_selectedDay).isEmpty)
                         Container(
                           padding: const EdgeInsets.all(16),
                             child: const Center(
                           child: Text("No birthdays on this date"),
                         )),
                       for (var birthday
-                          in birthdays.getBirthdaysForDate(_focusedDay))
+                          in birthdays.getBirthdaysForDate(_selectedDay))
                         BirthdayEntry(
-                            birthday: birthday, ageCalcDate: _focusedDay)
+                            birthday: birthday, ageCalcDate: _selectedDay)
                     ],
                   ),
                 )
@@ -85,7 +86,7 @@ class _CalenderWidgetState extends State<CalenderWidget> {
                     onPressed: () => showModalBottomSheet(
                         context: context,
                         builder: (context) => BdAddWidget(
-                            Birthday(date: _focusedDay), onSubmit: (bd) {
+                            Birthday(date: _selectedDay), onSubmit: (bd) {
                           birthdays.addBirthday(bd);
                         })),
                     child: const Icon(Icons.add),

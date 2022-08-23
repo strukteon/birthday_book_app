@@ -17,7 +17,7 @@ class _AllBdsScreenState extends State<AllBdsScreen> {
     return Consumer<BirthdayNotifier>(builder: (context, birthdays, child) => ListView.builder(
         itemCount: birthdays.birthdayList.length,
         itemBuilder: (context, index) {
-          return BirthdayEntry(birthday: birthdays.birthdayList[index], ageCalcDate: DateTime.now(),);
+          return BirthdayEntry(birthday: birthdays.getSorted(BirthdaySortingMethod.name)[index], ageCalcDate: DateTime.now(),);
         })
     );
   }

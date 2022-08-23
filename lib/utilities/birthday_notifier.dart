@@ -71,6 +71,7 @@ class BirthdayNotifier extends ChangeNotifier {
         days.addAll(value);
       }
     });
+    days.sort(BirthdaySortingMethod.name);
     return days;
   }
 
@@ -79,4 +80,16 @@ class BirthdayNotifier extends ChangeNotifier {
     Birthday.deleteAll();
     notifyListeners();
   }
+
+  getSorted([int Function(Birthday, Birthday)? compare]) {
+    var birthdays = birthdayList;
+    birthdays.sort(compare);
+    return birthdays;
+  }
+}
+
+class BirthdaySortingMethod {
+  static int Function(Birthday, Birthday) name = (birthday1, birthday2) {
+    return birthday1.displayName.compareTo(birthday2.displayName);
+  };
 }
