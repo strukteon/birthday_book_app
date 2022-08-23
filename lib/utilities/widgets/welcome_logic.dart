@@ -7,7 +7,6 @@ import 'package:shared_preferences/shared_preferences.dart';
 import '../../screens/main_screen.dart';
 import '../../utilities/utils.dart';
 
-
 Future Function() onImportContactsTap(BuildContext context) => () async {
       var permissionStatus = await Permission.contacts.request();
       if (permissionStatus.isDenied) {
@@ -25,23 +24,18 @@ Future Function() onImportContactsTap(BuildContext context) => () async {
             return SimpleDialog(
               title: const Text("Import results"),
               children: [
-                ListView.builder(
-                  itemCount: contacts.length,
-                  shrinkWrap: true,
-                  itemBuilder: (context, index) {
-                    return BirthdayEntry(
-                      birthday: contacts[index],
-                      ageCalcDate: DateTime.now(),
-                      smallView: true,
-                      canClick: false,
-                    );
-                  },
+                Container(
+                  padding: const EdgeInsets.only(left: 24, top: 12, bottom: 12),
+                  child: Text("${contacts.length} contacts were imported."),
                 ),
-                TextButton(
-                    onPressed: () {
-                      Navigator.pop(context);
-                    },
-                    child: const Text("Ok"))
+                Container(
+                  padding: const EdgeInsets.only(left: 8, right: 8),
+                  child: TextButton(
+                      onPressed: () {
+                        Navigator.pop(context);
+                      },
+                      child: const Text("Ok")),
+                )
               ],
             );
           });

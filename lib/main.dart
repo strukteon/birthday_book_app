@@ -40,7 +40,7 @@ class MyApp extends StatelessWidget {
         : WelcomeScreen(),
       theme: Theme.of(context).copyWith(
           textTheme: Theme.of(context).textTheme.copyWith(
-                headlineLarge: TextStyle(
+                headlineLarge: const TextStyle(
                     color: Colors.white,
                     fontSize: 50,
                     fontWeight: FontWeight.w600),
@@ -48,6 +48,10 @@ class MyApp extends StatelessWidget {
                     color: Colors.white.withAlpha(200),
                     fontSize: 30,
                     fontWeight: FontWeight.w400),
+                displaySmall: TextStyle(
+                    color: Colors.white.withAlpha(200),
+                    fontSize: 12,
+                    fontWeight: FontWeight.w300),
               )),
     );
   }

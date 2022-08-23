@@ -1,8 +1,11 @@
 import 'package:birthday_book/model/settings.dart';
+import 'package:birthday_book/utilities/utils.dart';
 import 'package:birthday_book/utilities/widgets/welcome_logic.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
+import 'package:url_launcher/url_launcher.dart';
+import 'package:url_launcher/url_launcher_string.dart';
 
 class WelcomeScreen extends StatefulWidget {
   const WelcomeScreen({Key? key}) : super(key: key);
@@ -135,20 +138,32 @@ class _ContactsSlide extends StatelessWidget {
       icon: Icons.contacts,
       subtitle:
           "Do you want to import your contacts and their saved birthdays?",
-      child: Container(
-          padding: const EdgeInsets.only(top: 32),
-          child: Row(
-            children: [
-              Expanded(
-                  child: OutlinedButton(
-                onPressed: onImportContactsTap(context),
-                style: OutlinedButton.styleFrom(
-                    primary: Colors.white,
-                    side: const BorderSide(color: Colors.white)),
-                child: const Text("Import contacts"),
-              ))
-            ],
-          )),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+        Container(
+            padding: const EdgeInsets.only(top: 32),
+            child: Row(
+              children: [
+                Expanded(
+                    child: OutlinedButton(
+                      onPressed: onImportContactsTap(context),
+                      style: OutlinedButton.styleFrom(
+                          primary: Colors.white,
+                          side: const BorderSide(color: Colors.white)),
+                      child: const Text("Import contacts"),
+                    )),
+              ],
+            )),
+
+        Text("None of your contacts will be shared with us.", style: Theme.of(context).textTheme.displaySmall),
+        GestureDetector(child: Text("Privacy Policy", style: Theme.of(context).textTheme.displaySmall?.copyWith(
+          decoration: TextDecoration.underline,
+        )),
+        onTap: () {
+          launchUrlString(StaticValues.privacyPolicyUrl);
+        },)
+      ],),
     );
   }
 }
