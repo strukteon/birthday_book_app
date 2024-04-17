@@ -1,15 +1,14 @@
-# birthday_book
+# Birthday Book app
 
-A new Flutter project.
+Birthday book is an app which aims to show you all the birthdays of your contacts in a clean interface.
+It automatically sends you reminders to send them a "happy birthday" message and can even automate that for you (if you want to).
 
-## Getting Started
+<img src=".github/images/bootup.gif" height="500"/>
 
-This project is a starting point for a Flutter application.
 
-A few resources to get you started if this is your first Flutter project:
+<img src=".github/images/main_screen.jpg" height="500"/>
 
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
+## How to install
 
 For help getting started with Flutter development, view the
 [online documentation](https://docs.flutter.dev/), which offers tutorials,
